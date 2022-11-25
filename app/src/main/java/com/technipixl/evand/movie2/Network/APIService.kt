@@ -11,6 +11,10 @@ import retrofit2.http.Query
 
 class APIService {
 	private val BASE_URL = "https://api.themoviedb.org/3/"
+
+	companion object{
+		const val APIKEY = "b2168bae3a2c67509eb6b97572f521c2"
+	}
 //	private val BASE_IMG_URL = "https://image.tmdb.org/t/p/w500/"
 
 	private val retrofit = Retrofit.Builder()
@@ -25,7 +29,7 @@ class APIService {
 			@Query("api_key") apiKey: String,
 			@Query("language") language: String,
 			@Query("page") page: Int
-		) : Flow<MovieResult>
+		) : MovieResult
 
 		@GET("search/movie")
 		suspend fun searchResult(
@@ -47,9 +51,7 @@ class APIService {
 		apiKey: String,
 		page: Int,
 		language: String = "fr"
-	) = retrofit.trendingMovies(apiKey, language, page).map {
-		it.results
-	}
+	) = retrofit.trendingMovies(apiKey, language, page).results
 
 	suspend fun getSearchResult(
 		apiKey: String,
