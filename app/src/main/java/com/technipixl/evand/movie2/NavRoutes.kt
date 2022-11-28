@@ -1,6 +1,6 @@
 package com.technipixl.evand.movie2
 
-enum class BottomNavItems {
+enum class NavRoutes {
 	SearchMovie,
 	PopularMovie,
 	DetailsMovie,

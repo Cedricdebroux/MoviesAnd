@@ -28,16 +28,29 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
+@Composable
+    fun Header(currentScreen:NavRoutes){
+        when(currentScreen){
+           NavRoutes.SearchMovie -> SearchHeader()
+            NavRoutes.PopularMovie -> PopularHeader()
+            NavRoutes.DetailsMovie -> {/*TODO*/}
+        }
+    }
 
 @Composable
 fun Movie2App(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = backStackEntry?.destination?.route ?: BottomNavItems.SearchMovie.name
+    val currentScreen = backStackEntry?.destination?.route ?: NavRoutes.SearchMovie.name
+    var screen by remember {
+        mutableStateOf(NavRoutes.SearchMovie)
+    }
 
-
-    Scaffold(bottomBar = {
+    Scaffold(
+        topBar = {
+            Header(currentScreen = screen)
+        },
+        bottomBar = {
         BottomNavigation(
             selected = currentScreen,
             navigationChanged = { navController.navigate(it) }
@@ -48,27 +61,39 @@ fun Movie2App(modifier: Modifier = Modifier) {
 
         NavHost(
             navController = navController,
-            startDestination = BottomNavItems.SearchMovie.name,
+            startDestination = NavRoutes.SearchMovie.name,
             modifier = modifier.padding(innerPadding)
         ) {
-            composable(route = BottomNavItems.SearchMovie.name) {
-                SearchMovie(onClick = { route, movie ->
+            composable(route = NavRoutes.SearchMovie.name) {
+                SearchMovie(onClick = { movie ->
                     selectedMovie = movie
-                    navController.navigate(route)
+                    navController.navigate(NavRoutes.DetailsMovie.name)
+                    screen = NavRoutes.DetailsMovie
                 })
+                screen = NavRoutes.SearchMovie
             }
 
-            composable(route = BottomNavItems.PopularMovie.name) {
-                PopularMovie(onClick = { route, movie ->
+            composable(route = NavRoutes.PopularMovie.name) {
+
+                PopularMovie(onClick = { movie ->
                     selectedMovie = movie
-                    navController.navigate(route)
+                    navController.navigate(NavRoutes.DetailsMovie.name) {
+                        popUpTo(NavRoutes.DetailsMovie.name) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    screen = NavRoutes.DetailsMovie
                 })
+                screen = NavRoutes.PopularMovie
             }
 
-            composable(route = BottomNavItems.DetailsMovie.name) {
-                DetailsMovie(onClick = { route, movie ->
+            composable(route = NavRoutes.DetailsMovie.name) {
+                DetailsMovie(onClick = {  movie ->
                     selectedMovie = movie
-                    navController.navigate(route)
+                    navController.navigate(NavRoutes.DetailsMovie.name)
+                    screen = NavRoutes.DetailsMovie
                 })
             }
         }

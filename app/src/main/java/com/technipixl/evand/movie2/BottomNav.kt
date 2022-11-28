@@ -8,8 +8,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 
 
 @Composable
@@ -29,8 +27,8 @@ fun BottomNavigation(
 			label = {
 				Text("Search")
 			},
-			selected = selected == BottomNavItems.SearchMovie.name,
-			onClick = { navigationChanged(BottomNavItems.SearchMovie.name) }
+			selected = selected == NavRoutes.SearchMovie.name,
+			onClick = { navigationChanged(NavRoutes.SearchMovie.name) }
 		)
 		BottomNavigationItem(
 			icon = {
@@ -42,8 +40,8 @@ fun BottomNavigation(
 			label = {
 				Text("Movies")
 			},
-			selected = selected == BottomNavItems.PopularMovie.name,
-			onClick = { navigationChanged(BottomNavItems.PopularMovie.name) }
+			selected = selected == NavRoutes.PopularMovie.name,
+			onClick = { navigationChanged(NavRoutes.PopularMovie.name) }
 		)
 	}
 }

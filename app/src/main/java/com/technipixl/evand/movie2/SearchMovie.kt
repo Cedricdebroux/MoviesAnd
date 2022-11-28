@@ -2,7 +2,6 @@ package com.technipixl.evand.movie2
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,16 +19,9 @@ import com.technipixl.evand.movie2.model.MovieResult
 @Composable
 fun SearchMovie(
 	modifier: Modifier = Modifier,
-	onClick: (String, MovieResult.Movie) -> Unit,
+	onClick: (MovieResult.Movie) -> Unit,
 ) {
-	Row {
-		Header(
-			modifier = Modifier
-				.fillMaxWidth()
-				.fillMaxHeight(0.20F)
-		)
-//		SearchListMovies()
-	}
+
 }
 
 //@Composable
@@ -48,7 +40,7 @@ fun SearchCell(item: MovieResult.Movie, modifier: Modifier = Modifier){
 
 @Composable
 @Preview
-fun Header(modifier: Modifier = Modifier){
+fun SearchHeader(modifier: Modifier = Modifier){
 	var textState by remember {
 		mutableStateOf(TextFieldValue(""))
 	}

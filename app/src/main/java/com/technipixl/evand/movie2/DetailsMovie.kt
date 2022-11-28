@@ -7,7 +7,7 @@ import com.technipixl.evand.movie2.model.MovieResult
 @Composable
 fun DetailsMovie(
 	modifier: Modifier = Modifier,
-	onClick: (String, MovieResult.Movie) -> Unit,
+	onClick: (MovieResult.Movie) -> Unit,
 ) {
 
 }
