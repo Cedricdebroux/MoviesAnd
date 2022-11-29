@@ -26,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -48,7 +50,7 @@ fun PopularMovie(
 	val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, {viewModel.refreshing()})
 	val movies by viewModel.movies.collectAsState(initial = listOf<MovieResult.Movie>())
 	
-
+		viewModel.getMovies()
 		if (movies.isNotEmpty()) {
 			Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
 				LazyVerticalGrid(columns = GridCells.Fixed(3)) {
@@ -98,18 +100,17 @@ fun PopularMovieCell(
 				contentDescription = null,
 				contentScale = ContentScale.FillHeight
 			)
-			RatingCircle(rating = movie.voteAverage)
+			RatingCircle(rating = movie.voteAverage, modifier = Modifier.size(35.dp), textSize = 12.sp)
 		}
 }
 
 @Composable
-fun RatingCircle(modifier: Modifier = Modifier, rating: Double?){
+fun RatingCircle(modifier: Modifier = Modifier, rating: Double?, textSize: TextUnit, fontWeight: FontWeight = FontWeight.Normal){
 	Column(modifier = Modifier
 		.fillMaxWidth()
 		.padding(10.dp), horizontalAlignment = Alignment.End) {
 		Box(
 			modifier = modifier
-				.size(35.dp)
 				.clip(CircleShape)
 				.background(Color.White)
 				.border(2.dp, MaterialTheme.colors.primary, shape = CircleShape),
@@ -117,8 +118,8 @@ fun RatingCircle(modifier: Modifier = Modifier, rating: Double?){
 		){
 			Text(
 				text = String.format("%.1f", rating),
-			fontSize = 12.sp
-
+			fontSize = textSize,
+			fontWeight = fontWeight
 			)
 		}
 

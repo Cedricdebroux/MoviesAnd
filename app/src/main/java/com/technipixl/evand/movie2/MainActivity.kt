@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,14 +27,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@Composable
 
+fun DetailHeader(){
+    Text(text = "test")
+}
 
 @Composable
     fun Header(currentScreen:NavRoutes){
         when(currentScreen){
            NavRoutes.SearchMovie -> SearchHeader()
             NavRoutes.PopularMovie -> PopularHeader()
-            NavRoutes.DetailsMovie -> {/*TODO*/}
+            NavRoutes.DetailsMovie -> DetailHeader()
         }
     }
 
@@ -57,7 +62,7 @@ fun Movie2App(modifier: Modifier = Modifier) {
         )
     }) { innerPadding ->
 
-        lateinit var selectedMovie: MovieResult.Movie
+        var selectedMovie by remember { mutableStateOf<MovieResult.Movie?>(null) }
 
         NavHost(
             navController = navController,
@@ -68,7 +73,6 @@ fun Movie2App(modifier: Modifier = Modifier) {
                 SearchMovie(onClick = { movie ->
                     selectedMovie = movie
                     navController.navigate(NavRoutes.DetailsMovie.name)
-                    screen = NavRoutes.DetailsMovie
                 })
                 screen = NavRoutes.SearchMovie
             }
@@ -84,17 +88,19 @@ fun Movie2App(modifier: Modifier = Modifier) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                    screen = NavRoutes.DetailsMovie
                 })
                 screen = NavRoutes.PopularMovie
             }
 
             composable(route = NavRoutes.DetailsMovie.name) {
+                if (selectedMovie == null) return@composable
                 DetailsMovie(onClick = {  movie ->
                     selectedMovie = movie
                     navController.navigate(NavRoutes.DetailsMovie.name)
-                    screen = NavRoutes.DetailsMovie
-                })
+                },
+                    movie = selectedMovie!!
+                )
+                screen = NavRoutes.DetailsMovie
             }
         }
     }

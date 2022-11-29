@@ -1,10 +1,11 @@
 package com.technipixl.evand.movie2.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class MovieResult(
 	val page: Int?, // 1
-	val results: List<Movie?>?,
+	val results: List<Movie>?,
 	@SerializedName("total_pages")
 	val totalPages: Int?, // 1000
 	@SerializedName("total_results")
@@ -24,6 +25,6 @@ data class MovieResult(
 		@SerializedName("vote_average")
 		val voteAverage: Double?, // 7.039
 		@SerializedName("genre_ids")
-		val genreIds: List<Int?>?,
-	)
+		val genreIds: List<Int>?,
+	) : Serializable
 }
