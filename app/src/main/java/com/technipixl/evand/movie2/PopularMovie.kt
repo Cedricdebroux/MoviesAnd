@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -39,34 +40,23 @@ import coil.size.Scale
 import kotlinx.coroutines.flow.first
 import retrofit2.http.Header
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PopularMovie(
 	modifier: Modifier = Modifier,
 	onClick: (MovieResult.Movie) -> Unit,
 	viewModel: PopularViewModel = viewModel()
 ) {
-	val refreshing by viewModel.isRefreshing.collectAsState()
-	val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, {viewModel.refreshing()})
-	val movies by viewModel.movies.collectAsState(initial = listOf<MovieResult.Movie>())
+	val movies by viewModel.movies.collectAsState(initial = listOf())
 	
-		viewModel.getMovies()
+		viewModel.getDatas()
+
 		if (movies.isNotEmpty()) {
-			Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-				LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-					items(movies.size) { index ->
-						movies[index]?.let {
-							PopularMovieCell(movie = it, modifier = Modifier.clickable {
-								onClick(it)
-							})
-						}
-					}
+			LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+				items(movies) { movie ->
+					PopularMovieCell(movie = movie, modifier = Modifier.clickable {
+						onClick(movie)
+					})
 				}
-				PullRefreshIndicator(
-					refreshing = refreshing, state = pullRefreshState, modifier = Modifier.align(
-						Alignment.TopCenter
-					)
-				)
 			}
 		}
 }

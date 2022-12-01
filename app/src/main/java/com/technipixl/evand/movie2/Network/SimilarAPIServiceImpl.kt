@@ -19,5 +19,5 @@ class SimilarAPIServiceImpl:BaseApiService() {
         id: Int,
         language: String = "fr",
     ) = retrofit.create(SimilarMovieRoutes::class.java)
-        .similarMovies(apiKey, language, id)
+        .similarMovies(apiKey, language, id).results
 }

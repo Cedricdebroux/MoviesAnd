@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class MovieResult(
 	val page: Int?, // 1
-	val results: List<Movie>?,
+	val results: List<Movie>,
 	@SerializedName("total_pages")
 	val totalPages: Int?, // 1000
 	@SerializedName("total_results")

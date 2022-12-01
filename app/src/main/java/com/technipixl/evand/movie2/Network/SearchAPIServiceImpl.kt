@@ -21,5 +21,5 @@ class SearchAPIServiceImpl: BaseApiService() {
         query: String,
         language: String = "fr")
             = retrofit.create(SearchMovieRoutes::class.java)
-        .searchResult(apiKey, language, page, query)
+        .searchResult(apiKey, language, page, query).results
 }

@@ -3,12 +3,15 @@ package com.technipixl.evand.movie2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,20 +30,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-@Composable
-
-fun DetailHeader(){
-    Text(text = "test")
-}
 
 @Composable
-    fun Header(currentScreen:NavRoutes){
-        when(currentScreen){
-           NavRoutes.SearchMovie -> SearchHeader()
-            NavRoutes.PopularMovie -> PopularHeader()
-            NavRoutes.DetailsMovie -> DetailHeader()
-        }
+fun Header(currentScreen: NavRoutes, currentSearch: (String) -> Unit, backClick: () -> Unit){
+    when(currentScreen){
+       NavRoutes.SearchMovie -> SearchHeader { currentSearch(it) }
+        NavRoutes.PopularMovie -> PopularHeader()
+        NavRoutes.DetailsMovie -> DetailHeader(backClick)
     }
+}
 
 @Composable
 fun Movie2App(modifier: Modifier = Modifier) {
@@ -50,10 +48,15 @@ fun Movie2App(modifier: Modifier = Modifier) {
     var screen by remember {
         mutableStateOf(NavRoutes.SearchMovie)
     }
+    var currentSearch: String? by remember { mutableStateOf(null) }
 
     Scaffold(
         topBar = {
-            Header(currentScreen = screen)
+            Header(screen, {
+                currentSearch = it
+            }) {
+                navController.popBackStack()
+            }
         },
         bottomBar = {
         BottomNavigation(
@@ -72,8 +75,16 @@ fun Movie2App(modifier: Modifier = Modifier) {
             composable(route = NavRoutes.SearchMovie.name) {
                 SearchMovie(onClick = { movie ->
                     selectedMovie = movie
-                    navController.navigate(NavRoutes.DetailsMovie.name)
-                })
+                    navController.navigate(NavRoutes.DetailsMovie.name) {
+                        popUpTo(NavRoutes.DetailsMovie.name) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                    currentSearch = currentSearch
+                )
                 screen = NavRoutes.SearchMovie
             }
 
@@ -96,7 +107,13 @@ fun Movie2App(modifier: Modifier = Modifier) {
                 if (selectedMovie == null) return@composable
                 DetailsMovie(onClick = {  movie ->
                     selectedMovie = movie
-                    navController.navigate(NavRoutes.DetailsMovie.name)
+                    navController.navigate(NavRoutes.DetailsMovie.name) {
+                        popUpTo(NavRoutes.DetailsMovie.name) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                     movie = selectedMovie!!
                 )
